@@ -23,10 +23,11 @@ def assign():
 		for day in range(days):
 			print day
 			staff_member = random.choice(list_of_names)
+			constraints_dict[staff_member]['OD_count'] += 1
 			while not is_satisfied(week,day,staff_member):
+				constraints_dict[staff_member]['OD_count'] -= 1
 				staff_member = random.choice(list_of_names)
 			calendar[week][day] = staff_member
-			constraints_dict[staff_member]['OD_count'] += 1
 			print 'assigned!'
 
 	print calendar
@@ -57,11 +58,22 @@ def is_satisfied(week,day,name):
 	if days_of_the_week[day] not in constraints_dict[name]['available_days']:
 		return False
 	if constraints_dict[name]['OD_count'] >= max_days:
-		print constraints_dict[name]['OD_count']
 		return False
 	return True
 
+def check_calendar(calendar):
+	for week in range(weeks):
+		for day in range(days):
+			if not is_satisfied(week,day,calendar[week][day]):
+				print calendar[week][day]
+				print week
+				print day
+				return False
+	return True
+
 assign()
+print check_calendar(calendar)
+
 
 
 
